@@ -6,18 +6,18 @@ public class SnakeMovement : MonoBehaviour
     [SerializeField] public float _speed;
     [SerializeField] private SwipesHandler _swipesController;
     [SerializeField] private Transform _snakeHead;
-    [SerializeField] private Transform[] _positions = new Transform[3];
     [SerializeField] private int _tailPositionsStep;
+    [SerializeField] private Vector2 _limits;
     [SerializeField] private List<Transform> _tailElements;
 
-    private int _currentPositionIndex;
     private List<Vector3> _positionHistory;
+    private Vector3 _targetPosition;
     private bool _isActive;
 
     public void Center()
     {
-        _currentPositionIndex = 1;
-        _snakeHead.transform.position = _positions[_currentPositionIndex].position;
+        _snakeHead.transform.position = new Vector3(0, transform.position.y, transform.position.z);
+        _targetPosition = _snakeHead.transform.position;
     }
 
     public void SetActive(bool isActive)
@@ -27,27 +27,28 @@ public class SnakeMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        _swipesController.OnSwipeHorizontal += (d) => Shift((int)Mathf.Sign(d));
+        _swipesController.OnSwipeHorizontal += (d) => Shift(d);
     }
 
     private void OnDisable()
     {
-        _swipesController.OnSwipeHorizontal -= (d) => Shift((int)Mathf.Sign(d));
+        _swipesController.OnSwipeHorizontal -= (d) => Shift(d);
     }
 
     private void Start()
     {
         _positionHistory = new List<Vector3>();
         Center();
+        _targetPosition = transform.position;
         SetActive(true);
     }
 
     private void Update()
     {
-        if (_snakeHead.transform.position != _positions[_currentPositionIndex].position)
+        if (_snakeHead.transform.position != _targetPosition)
         {
             _snakeHead.transform.position = Vector3.MoveTowards
-                (_snakeHead.transform.position, _positions[_currentPositionIndex].position, _speed * Time.deltaTime);
+                (_snakeHead.transform.position, _targetPosition, _speed * Time.deltaTime);
         }
 
         _positionHistory.Insert(0, _snakeHead.position);
@@ -68,9 +69,9 @@ public class SnakeMovement : MonoBehaviour
         }
     }
 
-    private void Shift(int direction)
+    private void Shift(float delta)
     {
-        if (direction == 0)
+        if (delta == 0)
         {
             return;
         }
@@ -80,13 +81,7 @@ public class SnakeMovement : MonoBehaviour
             return;
         }
 
-        if (direction > 0 && _currentPositionIndex < 2)
-        {
-            _currentPositionIndex++;
-        }
-        else if (direction < 0 && _currentPositionIndex > 0)
-        {
-            _currentPositionIndex--;
-        }
+        Vector3 shiftPosition = transform.position + Vector3.right * delta;
+        _targetPosition = new Vector3(Mathf.Clamp(shiftPosition.x, _limits.x, _limits.y), shiftPosition.y, shiftPosition.z);
     }
 }

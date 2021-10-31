@@ -6,6 +6,7 @@ public class SwipesHandler : MonoBehaviour
     public UnityAction<float> OnSwipeHorizontal;
 
     [SerializeField] private float _threshold;
+    [SerializeField] private float _sensitivity;
 
     private Camera _camera;
     private Vector2 _touchPosition;
@@ -22,14 +23,14 @@ public class SwipesHandler : MonoBehaviour
         {
             _touchPosition = _camera.ScreenToWorldPoint(Input.mousePosition + Vector3.forward);
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButton(0))
         {
             _releasePosition = _camera.ScreenToWorldPoint(Input.mousePosition + Vector3.forward);
 
             var delta = _releasePosition - _touchPosition;
             if (Mathf.Abs(delta.x) > _threshold)
             {
-                OnSwipeHorizontal?.Invoke(delta.x);
+                OnSwipeHorizontal?.Invoke(delta.x * _sensitivity);
             }
         }
     }

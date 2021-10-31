@@ -25,10 +25,10 @@ public class FeverMode : MonoBehaviour
 
     private IEnumerator Fever(float time)
     {
-        _snakeMovement.Center();
         _snakeMovement.SetActive(false);
         _snakeCollisionController.SetFever(true);
         _track.Speed *= 3;
+        _snakeMovement.Center();
         yield return new WaitForSeconds(time);
         _track.Speed /= 3;
         _snakeMovement.SetActive(true);

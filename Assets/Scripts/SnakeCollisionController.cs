@@ -27,6 +27,7 @@ public class SnakeCollisionController : MonoBehaviour
         if (!_isFever)
         {
             _crystals = 0;
+            CrystalPointsChanged?.Invoke(Crystals);
         }
     }
 
@@ -34,7 +35,10 @@ public class SnakeCollisionController : MonoBehaviour
     {
         if (_isFever)
         {
-            other.gameObject.SetActive(false);
+            if (!other.TryGetComponent(out ColorChanger colorChanger))
+            {
+                other.gameObject.SetActive(false);
+            }
             return;
         }
 
