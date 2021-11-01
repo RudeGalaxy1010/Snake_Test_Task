@@ -32,6 +32,7 @@ public class FeverMode : MonoBehaviour
         yield return new WaitForSeconds(time);
         _track.Speed /= 3;
         _snakeMovement.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
         _snakeCollisionController.SetFever(false);
     }
 }
