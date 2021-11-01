@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +9,14 @@ public class Track : MonoBehaviour
 
     private void Start()
     {
+        _segments[0].GenerateRandom();
+        _segments[1].GenerateRandom();
         _segments[2].GenerateStart();
     }
 
     private void Update()
     {
-        if (_segments[2].transform.position.z <= -_segmentLength)
+        if (_segments[2].transform.position.z <= -_segmentLength * 2f)
         {
             _segments[2].GenerateRandom();
             _segments[2].transform.position = _segments[0].transform.position + Vector3.forward * _segmentLength;

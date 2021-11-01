@@ -8,11 +8,6 @@ public class TrackSegment : MonoBehaviour
     [SerializeField] private List<Spike> _spikes;
     [SerializeField] private List<Crystal> _crystals;
 
-    private void Start()
-    {
-        GenerateRandom();
-    }
-
     public void GenerateRandom()
     {
         for (int i = 0; i < _food.Count; i++)
@@ -48,6 +43,8 @@ public class TrackSegment : MonoBehaviour
 
     public void GenerateStart()
     {
+        GenerateRandom();
+
         for (int i = 0; i < _food.Count / 3; i++)
         {
             _food[i].gameObject.SetActive(false);
